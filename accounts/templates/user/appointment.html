@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block 'content' %}
+
+
+<div dir="rtl">
+<div class="container">
+    <div class="signup">
+
+        <div class="col-md-8" >
+            <form method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                <h4 class="auth-header"> احجز ميعاد ...</h4>
+                {% for item in form %}
+                {{item}}
+                <br>
+                {% endfor %}
+
+                {% for message in messages  %}          
+                <p>{{message}} </p>
+                {% endfor %}
+                
+                <div class="buttons-w  "><button type="submit" class="btn btn-success ml-5">احجز</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+{% endblock 'content' %}

@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'content' %}
+
+<div dir="rtl">
+    <!-- Search -->
+    <div class="catagory_area ">
+        <div class="container " style="margin-top: 10rem">
+                    <div class=" single_text">
+                        <h2>احجز مع
+                            أفضل دكتور في مصر</h3>
+                        <h3>احجز اونلاين او كلم  ١٧٧٥۸</h4>
+                        <h4>١٦٠٠٠ دكتور -٤٠٠٠ استاذ واستشاري - اكثر من ۲٠ تخصص</h5>
+                        <br>
+                    </div>
+                   
+                </div>
+            </div>
+<div class="job_details_area">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="job_details_header">
+                <div class="single_jobs white-bg d-flex justify-content-between">
+                    <div class="jobs_left d-flex align-items-center">
+                        <div >
+                            {% if doctor.image %}
+                                <img class="img-circle" src="{{doctor.image.url}}" alt="" width="100" height="100">
+                            {% else %}
+                                <img class="img-circle" src="{% static 'img/candiateds/2.png' %} " alt="" width="100" height="100">
+                            {% endif %}
+                            
+                        </div>
+                        <div class="jobs_conetent">
+                            <a href="#" ><h4>{{doctor.name}}</h4></a>
+                            <div class="links_locat d-flex align-items-center">
+                                <div class="location">
+                                    <p> <i class="fa fa-map-marker"></i>  {{doctor.address}} </p>
+                                </div>
+                                <div class="location">
+                                    <p> <i class="fa fa-clock-o"></i>   {{doctor.Waiting_time}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="jobs_right">
+                        <div class="apply_now">
+                            {% if request.user in doctor.favourite.all %}
+                                <a class="heart_mark" href="{% url 'add_to_favourite' doctor.slug %}"> <i style="color:red;" class="ti-heart"></i> </a>
+                            {% else %}
+                                <a class="heart_mark active" href="{% url 'add_to_favourite' doctor.slug %}"> <i class="ti-heart"></i> </a>
+                            {% endif %}
+                        </div>
+                        <br>
+                        <div class="apply_now">
+                            <a class="boxed-btn3" href="{% url 'appointment' doctor.slug %}">حجز كشف</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="descript_wrap white-bg">
+                <div class="single_wrapp">
+                    <h3>نبذه عن الدكتور</h3>
+                </div>
+                <div class="white-card white-card-inner">
+                    <div class="single_wrap" style="margin-top: 10px;">
+                        <h4>معلومات عن الدكتور</h4>
+                        <ul>
+                            <p{{doctor.who_i}}</p>
+                        </ul>
+                    </div>
+                </div>
+                <div class="single_wrap">
+                    <h4>خدمات الدكتور :</h4>
+                    <ul>
+                        {% for service in doctor.doctorServices.all  %}
+                            <p class="tagitem disable-click pull-left mr-4" style="background-color: #f5f5f5;
+                            color: #808184;"> {{service.service}}
+                            </p>
+                        {% endfor %}
+                    </ul>
+                    <br>
+                </div>
+                <div class="single_wrap">
+                    <h4>صور العيادة :</h4>
+                    {% for image in doctor.clinicImages.all  %}
+                        <img class="image_clinic" src="{{image.image.url}}" alt="" >
+                    {% endfor %}
+                    
+                </div>
+            </div>
+            <br>
+    <!-- comments -->
+    <div class="section-row">
+        <div class="section-title">
+            <h2 style="color: brown;">التعليقات ( {{doctor.get_comments_count}} )</h2>
+        </div>
+
+        <div class="post-comments" >
+
+            <!-- comment -->
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object" src="img/avatar.png" alt="">
+                </div>
+                <div class="media-body " >
+                    {% for comment in comments %}
+                    
+                    <div class="media-heading">
+                        <h4> 
+                            {% if request.user == comment.patient %}
+                                <span class="time"> <a href="{% url 'delete_comment' comment.id %}" class="text-danger"> remove </a> </span> 
+                            {% endif %}
+                        <span class="time">  {{comment.date_created}} </span>
+
+                        {{comment.patient}}
+                        </h4>
+                       
+                    </div>
+                    <p>{{comment.comment}}</p>
+                    <!-- Break -->
+                    
+                    <div class="media">   
+                    </div>
+                    <!-- /break -->
+                    {% endfor %}
+
+                </div>
+            </div>
+            <!-- /comment -->
+
+        </div>
+    </div>
+    <!-- /comments -->    
+    
+    
+
+    <div class="apply_job_form white-bg">
+        <h4>إترك تعليقك</h4>
+        <form method="POST"  id='comment-form'>
+            {% csrf_token %}
+            <div class="row">
+                
+                <div class="col-md-12">
+                    <div class="input_field">
+                        <textarea name='comment' cols="30" rows="10" placeholder="تعليقك .."></textarea>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="submit_btn">
+                        <button class="boxed-btn3 w-100" type="submit">تعليق</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <form method='POST'>
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="input-rating">
+                    <strong class="text-uppercase">Your Rating: </strong>
+                    <div class="stars" >
+                        <input type="radio" id="star5" name="rate" value="5" /><label for="star5"></label>
+                        <input type="radio" id="star4" name="rate" value="4" /><label for="star4"></label>
+                        <input type="radio" id="star3" name="rate" value="3" /><label for="star3"></label>
+                        <input type="radio" id="star2" name="rate" value="2" /><label for="star2"></label>
+                        <input type="radio" id="star1" name="rate" value="1" /><label for="star1"></label>
+                    </div>
+                </div>
+            </div>
+            <button class="boxed-btn3 " type="submit">تقييم</button>
+
+            {% comment %} <input class="primary-btn btn-sm" type='submit' value='تقييم'> {% endcomment %}
+            </form>
+    </div>
+        </div>
+        
+        
+        
+        <div class="col-lg-4">
+            <div class="job_sumary">
+                <div class="summery_header">
+                    <h3>معلومات عن الدكتور </h3>
+                </div>
+                <div class="job_content">
+                    <ul>
+                        <li>  أنشاء فى :<span style="color: blue;">{{doctor.date_created}}</span> </li>
+                        <li> الكشف : <span style="color: blue;">{{doctor.price}}</span> جنية</li>
+                        <li> بلد المنشأ : <span style="color: blue;">{{doctor.address}}</span></li>
+                        <li> رقم الهاتف  : <span style="color: blue;"></span></li>
+                        <li>عدد ساعات العمل :<span style="color: blue;">{{doctor.working_hours}}</span> </li>
+                    </ul>
+                    
+                </div>
+            </div>
+            <div class="share_wrap d-flex">
+                <span>شارك الصفحه :</span>
+                <ul>
+                    <li><a target="_blank" href="{{doctor.facebook}}"> <i class="fa fa-facebook"></i></a> </li>
+                <li><a target="_blank" href="{{doctor.gmail}}"> <i class="fa fa-google-plus"></i></a> </li>
+                <li><a target="_blank" href="{{doctor.twitter}}"> <i class="fa fa-twitter"></i></a> </li>
+                </ul>
+            </div>
+
+           
+
+            <div class="job_location_wrap">
+                <div class="job_lok_inner">
+                    <div id="map" style="height: 200px;"></div>
+                    <script>
+                        function initMap() {
+                        var uluru = {lat: -25.363, lng: 131.044};
+                        var grayStyles = [
+                            {
+                            featureType: "all",
+                            stylers: [
+                                { saturation: -90 },
+                                { lightness: 50 }
+                            ]
+                            },
+                            {elementType: 'labels.text.fill', stylers: [{color: '#ccdee9'}]}
+                        ];
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            center: {lat: -31.197, lng: 150.744},
+                            zoom: 9,
+                            styles: grayStyles,
+                            scrollwheel:  false
+                        });
+                        }
+                        
+                    </script>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpfS1oRGreGSBU5HHjMmQ3o5NLw7VdJ6I&callback=initMap"></script>
+                    
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+    $(document).on('submit',"#comment-form",function(e){
+        e.preventDefault();
+        var comment_form=$("#comment-form")
+        $.ajax({
+            url:"{% url 'doctor_detail' doctor.slug %}",
+            type:'POST',
+            data:comment_form.serialize(),
+            dataType:"json",
+            header:{'X-CSRFToken':'{% csrf_token %}'},
+            success:function(response){
+                alert("success")
+
+            }
+
+        })
+
+    })
+    print("hgo")
+</script>
+
+{% endblock 'content' %}

@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+{% load static  %}
+{% block 'content' %}
+
+<div dir="rtl">
+<div class="container">
+    <div class="signup">
+
+    <div class="col-md-9" >
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4 class="auth-header">  اضافة خدمات الدكتور</h4>
+
+            {% for item in form %}
+                <div class="form-group">
+                    {% comment %} {{item.name}} {% endcomment %}
+                    {{item}}
+                </div>
+            {% endfor %}
+           
+            <br>
+            <div class="buttons-w"><button type="submit" class="btn btn-success">اضافه</button></div>
+            
+        </form>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock 'content' %}
